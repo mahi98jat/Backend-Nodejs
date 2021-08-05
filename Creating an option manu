@@ -1,0 +1,45 @@
+const readline = require("readline");
+const readline1 = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+function hurrah() {
+  var books = ["carry minati", "boomboom", "mahipal on mars"];
+  readline1.question(
+    "Press-1 (to see books)  Press-2 (for add a book) Press-3 (to Quit)  ",
+    (input) => {
+      
+      if (input == 1) {
+        books.forEach((el) => {
+          console.log(el);
+        });
+        hurrah();
+      } else if (input == 2) {
+        readline1.question("Write the book name here", (book) => {
+          books.push(book);
+          console.log("book added succesfully");
+          hurrah();
+        });
+      } else if (input == 3) {
+        readline1.question(
+          "Are you sure you want to quit - press Y to quit",
+          (input) => {
+            if (input === "Y") {
+              readline1.close();
+            } else if (input === 1 || input === 2 || input === 3) {
+              hurrah();
+            }
+          }
+        );
+      } else {
+        console.log("invalid Input");
+        hurrah();
+      }
+    }
+  );
+}
+hurrah();
+readline1.on("close", () => {
+  console.log("Bye Bye Tata Come back again if you become boss");
+});
