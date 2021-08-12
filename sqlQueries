@@ -1,0 +1,101 @@
+// creating the posts table and adding data into it
+delete  from posts where id =1;
+ALTER TABLE posts DROP COLUMN post_time;
+alter table posts add column post_time TIMESTAMP default;
+alter table posts add column post_time TIMESTAMP DEFAULT now() after author;
+insert into posts (title, content, author) values ("olympics", "India bring 7 medals", "TOI");
+insert into posts (title, content, author) values ("cricket", "India win from srilanka", "india today"), ("flood", "heavy rain in uk", "raj patrika"), 
+("politics", "trump loose the election", "american express"), ("taffic","a lucknow girl slapped", "up bhaskar");
+
+// creating the comments table
+create table comments (comment_body varchar(50), post varchar(50) not null);
+insert into `comments` (comment_body, post) values("superb", "olympics"), ("nice", "cricket"), ("so bad", "flood"), ("ohh", "politics");
+
+// creating the authors table
+
+create table authors (first_name VARCHAR(20) not null, last_name varchar(20));
+insert into authors(first_name , last_name) values ("mahipal", "singh"), ("bhawani", "shankar"),
+ ("raju", "babu"),("karan", "jadu"),("pranali", "malkar");
+// creating the tags table
+create table tags( tag_id int not null, (tag_id) foreign key (tag_id) references posts(id), tag VARCHAR(20));
+create table tags(tag_id int not null, foreign key (tag_id) REFERENCES posts(id), tag varchar(50) not null);
+insert into tags ( tag_id, tag) values( 4,"kota"), ( 3, "udaipur"), ( 2,"jaipur"), ( 6,"sikar"), (5,"jodhpur");
+insert into tags ( tag_id, tag) values( 3,"kota"), ( 2, "udaipur"), ( 5,"jaipur"), ( 6,"sikar"), (4,"jodhpur");
+insert into tags ( tag_id, tag) values( 4, "malikheda"), 
+( 3, "patwari ka bass"), ( 2,"gribdunia"), ( 6,"dhasu singh"), (5,"tharabhaijogindar");
+
+// updating the auther names in the posts table
+
+update posts set authors = "bhawani" where id = 2;
+// updating id in authors table
+alter table authors add column aut_id int not null  primary key auto_increment;
+// add column in comments table making foreign keys in comments table;
+alter table comments add column authors_id int not null;
+SET foreign_key_checks = 0;
+
+ALTER TABLE comments ADD FOREIGN KEY (authors_id) REFERENCES authors (aut_id) ON DELETE CASCADE ON UPDATE CASCADE
+
+SET foreign_key_checks = 1;
+//adding more data into comments table
+insert into comments (comment_body, post, authors_id) values("awesome", "olympics", 5), ("very bad", "flood", 5), ("bhayanak", "cricket", 1),
+ ("wow", "politics",2), ("katai zahar", "traffic", 3), ("bhotnath", "taffic", 4);
+
+// queries that we have to perform
+select * from posts where author = "bhawani";
+
+select comment_body , first_name from comments, authors where comments.authors_id = authors.aut_id;
+
+select title, content, comment_body from posts, comments where posts.title = comments.post;
+select title, tag from posts, tags where posts.id = tags.tag_id and posts.title = "olympics";
+select title from posts, tags where posts.id = tags.tag_id and tags.tag = "kota";
+select tag, first_name, last_name from tags, authors where tags.tag_id = authors.aut_id;
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+all the rough and tough commands that I used in whole process.
+delete  from posts where id =1;
+ALTER TABLE posts DROP COLUMN post_time;
+alter table posts add column post_time TIMESTAMP default;
+alter table posts add column post_time TIMESTAMP DEFAULT now() after author;
+insert into posts (title, content, author) values ("olympics", "India bring 7 medals", "TOI");
+insert into posts (title, content, author) values ("cricket", "India win from srilanka", "india today"), ("flood", "heavy rain in uk", "raj patrika"), ("politics", "trump loose the election", "american express"), ("taffic","a lucknow girl slapped", "up bhaskar");
+# adding data in comments table
+//ALTER TABLE `comments` DROP COLUMN post_title;
+
+drop table `comments`;
+create table comments (comment_body varchar(50), post varchar(50) not null);
+insert into `comments` (comment_body, post) values("superb", "olympics"), ("nice", "cricket"), ("so bad", "flood"), ("ohh", "politics");
+
+create table authors (first_name VARCHAR(20) not null, last_name varchar(20));
+insert into authors(first_name , last_name) values ("mahipal", "singh"), ("bhawani", "shankar"), ("raju", "babu"),("karan", "jadu"),("pranali", "malkar");
+create table tags( tag_id int not null, (tag_id) foreign key (tag_id) references posts(id), tag VARCHAR(20));
+create table tags(tag_id int not null, foreign key (tag_id) REFERENCES posts(id), tag varchar(50) not null);
+insert into tags ( tag_id, tag) values( 4,"kota"), ( 3, "udaipur"), ( 2,"jaipur"), ( 6,"sikar"), (5,"jodhpur");
+insert into tags ( tag_id, tag) values( 3,"kota"), ( 2, "udaipur"), ( 5,"jaipur"), ( 6,"sikar"), (4,"jodhpur");
+insert into tags ( tag_id, tag) values( 4, "malikheda"), ( 3, "patwari ka bass"), ( 2,"gribdunia"), ( 6,"dhasu singh"), (5,"tharabhaijogindar");
+alter table `comments` add column author_name varchar(20) not null after comment_body, foreign key (author_name) REFERENCES authors(first_name);
+alter table comments add column author_name VARCHAR(20) not null AFTER comment_body;
+alter table comments drop column author_name;
+alter table authors add column aut_id int not null  primary key auto_increment;
+alter table comments add column (`authors_id` int not null, foreign key (`authors_id`) REFERENCES authors(`aut_id`));
+alter table comments add column authors_id int not null;
+SET foreign_key_checks = 0;
+
+ALTER TABLE comments ADD FOREIGN KEY (authors_id) REFERENCES authors (aut_id) ON DELETE CASCADE ON UPDATE CASCADE
+
+SET foreign_key_checks = 1;
+# adding more data into the comments table;
+insert into comments (comment_body, post, authors_id) values("awesome", "olympics", 5), ("very bad", "flood", 5), ("bhayanak", "cricket", 1), ("wow", "politics",2), ("katai zahar", "traffic", 3), ("bhotnath", "taffic", 4);
+
+
+select * from posts where author = "bhawani";
+
+select comment_body , first_name from comments, authors where comments.authors_id = authors.aut_id;
+
+select title, content, comment_body from posts, comments where posts.title = comments.post;
+select title, tag from posts, tags where posts.id = tags.tag_id and posts.title = "olympics";
+select title from posts, tags where posts.id = tags.tag_id and tags.tag = "kota";
+select tag, first_name, last_name from tags, authors where tags.tag_id = authors.aut_id;
+
+
+
